@@ -44,10 +44,9 @@ class App extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevState.top != this.state.top || prevState.left != this.state.left) {
+    if (prevState.top !== this.state.top || prevState.left !== this.state.left) {
       const { beers, speed } = this.state;
       if (this.colide()) { 
-        this.interval ? clearInterval(this.interval) : null
         this.setState({ beers: beers + 1, powerUp: {}, speed: speed + 1 }, () => {
           const { powerUp } = this.state;
           if (!powerUp.top && !powerUp.left)
