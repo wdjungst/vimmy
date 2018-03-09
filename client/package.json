@@ -1,5 +1,5 @@
 {
-  "name": "vimmy",
+  "name": "client",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -14,11 +14,5 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },
-  "scripts": {
-    "build": "cd client && npm install --only=dev && npm install && npm run build && cd ..",
-    "deploy": "cp -a client/build/. public/",
-    "heroku-postbuild": "npm run build && npm run deploy && echo 'Client Built'"
-  },
-  "keywords": [],
-  "license": "MIT"
+  "proxy": "http://localhost:3001"
 }
