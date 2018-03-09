@@ -5,6 +5,7 @@ import s2 from './images/s2.png';
 import s3 from './images/s3.png';
 import s4 from './images/s4.png';
 import s5 from './images/s5.png';
+import s6 from './images/s6.png';
 import beer from './images/beer.png';
 
 const Man = styled.img`
@@ -28,7 +29,7 @@ const PowerUp = styled.img`
 `
 
 class App extends Component {
-  images = { s1, s2, s3, s4, s5 }
+  images = { s1, s2, s3, s4, s5, s6 }
   state = { top: 0, left: 0, vh: 0, sprite: 1, powerUp: {}, beers: 0, speed: 5, facing: null }
 
   componentDidMount() {
@@ -48,7 +49,7 @@ class App extends Component {
       const { beers, speed } = this.state;
       if (this.colide()) { 
         this.interval ? clearInterval(this.interval) : null
-        this.setState({ beers: beers + 1, powerUp: {}, speed: speed + 1 }, () => {
+        this.setState({ beers: beers + 1, powerUp: {}, speed: speed + 1, sprite: 6 }, () => {
           this.interval = setInterval( () => {
             const { powerUp } = this.state;
             if (!powerUp.top && !powerUp.left)
@@ -79,7 +80,7 @@ class App extends Component {
   walk = (didWalk) => {
     const { sprite } = this.state
     if (didWalk) {
-      if (sprite === 5)
+      if (sprite === 5 || sprite === 6)
         this.setState({ sprite: 1 })
       else
         this.setState({ sprite: sprite + 1 })

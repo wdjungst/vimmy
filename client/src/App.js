@@ -5,6 +5,7 @@ import s2 from './images/s2.png';
 import s3 from './images/s3.png';
 import s4 from './images/s4.png';
 import s5 from './images/s5.png';
+import s6 from './images/s6.png';
 import beer from './images/beer.png';
 
 const Man = styled.img`
@@ -28,7 +29,7 @@ const PowerUp = styled.img`
 `
 
 class App extends Component {
-  images = { s1, s2, s3, s4, s5 }
+  images = { s1, s2, s3, s4, s5, s6 }
   state = { top: 0, left: 0, vh: 0, sprite: 1, powerUp: {}, beers: 0, speed: 5, facing: null }
 
   componentDidMount() {
@@ -40,7 +41,6 @@ class App extends Component {
 
   componentWillUnmount() {
     document.removeEventListener('keydown', this.move)
-    clearInterval(this.interval)
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -49,11 +49,9 @@ class App extends Component {
       if (this.colide()) { 
         this.interval ? clearInterval(this.interval) : null
         this.setState({ beers: beers + 1, powerUp: {}, speed: speed + 1 }, () => {
-          this.interval = setInterval( () => {
-            const { powerUp } = this.state;
-            if (!powerUp.top && !powerUp.left)
-              this.addPowerUp()
-          });
+          const { powerUp } = this.state;
+          if (!powerUp.top && !powerUp.left)
+            this.addPowerUp()
         })
       }
     }
@@ -73,16 +71,19 @@ class App extends Component {
     let width = window.innerWidth
     let top = Math.abs(Math.floor(Math.random() * (height - 50)))
     let left = Math.abs(Math.floor(Math.random() * (width - 50)))
-    this.setState({ powerUp: { top, left } })
+    this.setState({ powerUp: { top, left }, sprite: 6 })
   }
 
   walk = (didWalk) => {
     const { sprite } = this.state
     if (didWalk) {
-      if (sprite === 5)
+      if (sprite === 5) {
         this.setState({ sprite: 1 })
-      else
+      } else if (sprite === 6) {
+        setTimeout( () => this.setState({ sprite: 1 }), 300 )
+      } else {
         this.setState({ sprite: sprite + 1 })
+      }
     }
   }
 
