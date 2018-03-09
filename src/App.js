@@ -71,8 +71,8 @@ class App extends Component {
   addPowerUp = () => {
     let height = window.innerHeight
     let width = window.innerWidth
-    let top = Math.floor(Math.random() * (height - 50))
-    let left = Math.floor(Math.random() * (width - 50))
+    let top = Math.abs(Math.floor(Math.random() * (height - 50)))
+    let left = Math.abs(Math.floor(Math.random() * (width - 50)))
     this.setState({ powerUp: { top, left } })
   }
 
