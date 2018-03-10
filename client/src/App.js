@@ -49,6 +49,38 @@ function setInvervalX(callback, delay, n=0, after) {
 
 }
 
+function *counter(start=0, step=1) {
+  let i = start 
+  yield i
+  while (true)
+    yield i += step
+}
+
+//Start & End are inclusive
+function *range(start, end, step=1) {
+  //TODO: handling for endless values
+  //if (start > end && step < 0)
+  if (start < end)
+    for (let i of counter(start, step)) {
+      if (i > end)
+        break
+      yield i
+    }
+  else
+    for (let i of counter(start, step)) {
+      if (i < end)
+        break
+      yield i
+    }
+}
+
+//for (let i of range(0, 100, 5))
+//  console.log(i)
+//
+//for (let i of range(0, -100, -5))
+//  console.log(i)
+
+
 class App extends Component {
   images = { s1, s2, s3, s4, s5, s6 }
   state = { top: 0, left: 0, vh: 0, sprite: 1, powerUp: {}, beers: 0, speed: 5, facing: null, motion: ""}
