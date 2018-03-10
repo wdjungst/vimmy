@@ -32,7 +32,7 @@ const PowerUp = styled.img`
 
 class App extends Component {
   images = { s1, s2, s3, s4, s5, s6 }
-  state = { top: 0, left: 0, vh: 0, sprite: 1, powerUp: {}, beers: 0, speed: 5, facing: null }
+  state = { top: 0, left: 0, vh: 0, sprite: 1, powerUp: {}, beers: 0, speed: 5, facing: null, motion: ""}
 
   componentDidMount() {
     const vh = window.innerHeight;
@@ -88,20 +88,40 @@ class App extends Component {
     }
   }
 
-  updateRepeat = (n = NaN) => {
-    // TODO: logic for motions 
+  updateMotion = (n = NaN) => {
+    let {motion} = this.state
+    if (isNaN(n))
+      this.setState({motion: ""})
+    else
+      this.setState({motion: motion + n})
+
+    //  console.log(this.state.motion)
+  }
+
+  getMotion = () => {
+
+    let {motion} = this.state
+    if (motion === "" || motion === "0")
+      return 1
+    else
+      return parseInt(motion)
+
   }
 
   handleInput = ({key}) => {
     // If Numeric
     if (/\d/.test(key)) 
-      this.updateRepeat(parseInt(key))
+      this.updateMotion(parseInt(key))
     // If one of 'hjkl'
-    else if (MoveRegex.test(key))
+    else if (MoveRegex.test(key)) {
       this.move(key)
+      this.updateMotion()
+    }
     // Otherwise
-    else
+    else {
+      this.updateMotion()
       console.log("USE VIM KEYS")
+    }
   }
 
   move = (key) => {
