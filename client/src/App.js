@@ -32,22 +32,23 @@ const PowerUp = styled.img`
 `
 
 // helpful link: https://stackoverflow.com/questions/2956966/javascript-telling-setinterval-to-only-fire-x-amount-of-times
-function setInvervalX(callback, delay, n=0, after) {
-  if (n === 0)
-    return setInterval(callback, delay)
-
-  let i = 0;
+//Invokes callback on each value of generator, optionally calling after once generator has expired
+function setIntervalGenerator(callback, delay, generator, after) {
   let intervalId = setInterval(() => {
-    callback();
-    if (++i === n) {
-      if (after !== undefined)
-        after() // fire off after the interval has completed
+    let genObj = generator.next()
+    if (genObj.done) {
       clearInterval(intervalId)
-    }
-  }, delay)
-  return intervalId;
 
+      if (after !== undefined)
+        after()
+    }
+    else
+      callback(genObj.value)
+  }, delay)
+  return intervalId 
 }
+
+
 
 function *counter(start=0, step=1) {
   let i = start 
@@ -73,6 +74,14 @@ function *range(start, end, step=1) {
       yield i
     }
 }
+
+function setIntervalN(cb, delay, n=0, after) {
+  return n === 0 ? setInterval(cb, delay) :
+    setIntervalGenerator(cb, delay, range(0, n), after)
+}
+
+//setIntervalGenerator((i) => console.log(`step ${i}`), 500, range(0, 100, 5))
+//setIntervalN((i) => console.log(`step ${i}`), 500, 20, () => console.log("all finished!"))
 
 //for (let i of range(0, 100, 5))
 //  console.log(i)
