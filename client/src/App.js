@@ -9,6 +9,7 @@ import s6 from './images/s6.png';
 import beer from './images/beer.png';
 
 const MoveRegex = /[hjkl]/
+const MotionSpeed = "500" // Milliseconds
 
 const Man = styled.img`
   position: absolute;
@@ -30,9 +31,29 @@ const PowerUp = styled.img`
   z-index: -1
 `
 
+// helpful link: https://stackoverflow.com/questions/2956966/javascript-telling-setinterval-to-only-fire-x-amount-of-times
+function setInvervalX(callback, delay, n=0, after) {
+  if (n === 0)
+    return setInterval(callback, delay)
+
+  let i = 0;
+  let intervalId = setInterval(() => {
+    callback();
+    if (++i === n) {
+      if (after !== undefined)
+        after() // fire off after the interval has completed
+      clearInterval(intervalId)
+    }
+  }, delay)
+  return intervalId;
+
+}
+
 class App extends Component {
   images = { s1, s2, s3, s4, s5, s6 }
   state = { top: 0, left: 0, vh: 0, sprite: 1, powerUp: {}, beers: 0, speed: 5, facing: null, motion: ""}
+
+  //TODO: ticker function that handles motion
 
   componentDidMount() {
     const vh = window.innerHeight;
