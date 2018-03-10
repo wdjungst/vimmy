@@ -8,6 +8,8 @@ import s5 from './images/s5.png';
 import s6 from './images/s6.png';
 import beer from './images/beer.png';
 
+const MoveRegex = /[hjkl]/
+
 const Man = styled.img`
   position: absolute;
   height: 180px;
@@ -35,12 +37,12 @@ class App extends Component {
   componentDidMount() {
     const vh = window.innerHeight;
     this.setState({ vh, top: vh, loaded: true })
-    document.addEventListener('keydown', this.move )
+    document.addEventListener('keydown', this.handleInput)
     setTimeout( () => this.addPowerUp(), 1000)
   }
 
   componentWillUnmount() {
-    document.removeEventListener('keydown', this.move)
+    document.removeEventListener('keydown', this.handleInput)
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -86,8 +88,23 @@ class App extends Component {
     }
   }
 
-  move = (e) => {
-    let { key } = e;
+  updateRepeat = (n = NaN) => {
+    // TODO: logic for motions 
+  }
+
+  handleInput = ({key}) => {
+    // If Numeric
+    if (/\d/.test(key)) 
+      this.updateRepeat(parseInt(key))
+    // If one of 'hjkl'
+    else if (MoveRegex.test(key))
+      this.move(key)
+    // Otherwise
+    else
+      console.log("USE VIM KEYS")
+  }
+
+  move = (key) => {
     let { top, left, speed, beers } = this.state;
     let moved = false
     let slip = 0
