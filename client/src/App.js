@@ -188,20 +188,23 @@ class App extends Component {
   }
 
   startMovement = (cb, generator) => {
+    document.removeEventListener('keydown', this.handleInput)
     this.setState({moving: true})
-    this.ticker = setIntervalGenerator(cb, 300, generator,
-      () => { this.setState({moving: false}) })
+    this.ticker = setIntervalGenerator(cb, 50, generator,
+      () => { this.setState({moving: false}); 
+      document.addEventListener('keydown', this.handleInput) })
   }
 
   move = (key) => {
     const { top, left, speed, beers } = this.state;
+    const motion = this.getMotion()
     const intoxication = beers > 10 ? beers - 10 : 0
+    const adjSpeed = 5 + speed
 
     //let offset = Math.floor(Math.random() * 2)
     //slip = offset === 0 ? Math.abs(slip) : -Math.abs(slip)
 
     const doMovement = (l, t) => {
-      console.log(`left: ${l}, top: ${t}`)
       this.setState({left: l, top: t})
       this.walk(true)
     }
@@ -212,7 +215,11 @@ class App extends Component {
       case 'h':
         if (left > 0) {
           this.setState({facing: "FlipH"})
-          doMovement(left - (5 + speed), top + slip())
+          if (motion === 1)
+            doMovement(left - adjSpeed, top + slip())
+          else
+            this.startMovement((l) => doMovement(l, this.state.top + slip()),
+              range(left, Math.max(-(motion * adjSpeed), 0), -adjSpeed))
         }
         break
       case 'j':
