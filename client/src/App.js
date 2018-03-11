@@ -89,7 +89,6 @@ function setIntervalN(cb, delay, n=0, after) {
 //for (let i of range(0, -100, -5))
 //  console.log(i)
 
-
 class App extends Component {
   images = { s1, s2, s3, s4, s5, s6 }
   state = { top: 0, left: 0, vh: 0, sprite: 1, powerUp: {}, beers: 0, speed: 5, facing: null, motion: ""}
@@ -185,9 +184,8 @@ class App extends Component {
       console.log("USE VIM KEYS")
     }
   }
-
   move = (key) => {
-    let { top, left, speed, beers } = this.state;
+    const { top, left, speed, beers } = this.state;
     let moved = false
     let slip = 0
     let drunk = beers > 10
@@ -196,41 +194,37 @@ class App extends Component {
 
     let offset = Math.floor(Math.random() * 2)
     slip = offset === 0 ? Math.abs(slip) : -Math.abs(slip)
+
+    const doMovement = (l, t) => {
+      //console.log(`left: ${l}, top: ${t}`)
+      this.setState({left: l, top: t})
+      this.walk(true)
+    }
       
     switch (key) {
       case 'h':
         if (left > 0) {
-          let t = top + slip;
-          moved = true
-          this.setState({ left: left - (5 + speed), top: t, facing: 'FlipH' })
+          this.setState({facing: "FlipH"})
+          doMovement(left - (5 + speed), top + slip)
         }
         break
       case 'j':
-        if (top < window.innerHeight) {
-          let l = left - slip;
-          moved = true
-          this.setState({ top: top + (5 + speed), left: l })
-        }
+        if (top < window.innerHeight)
+          doMovement(left - slip, top + (5 + speed))
         break
       case 'k':
-        if (top > 159) {
-          let l = left - slip;
-          moved = true
-          this.setState({ top: top - (5 + speed), left: l })
-        }
+        if (top > 159)
+          doMovement(left - slip, top - (5 + speed))
         break
       case 'l':
         if (left < window.innerWidth - 161) {
-          let t = top + slip;
-          moved = true
-          this.setState({ left: left + (5 + speed), top: t, facing: null })
-         }
+          this.setState({facing: null})
+          doMovement(left + (5 + speed), top + slip)
+        }
         break
       default:
         console.log('USE VIM KEYS!')
     }
-
-    this.walk(moved)
   }
 
   render() {
