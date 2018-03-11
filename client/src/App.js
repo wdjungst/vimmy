@@ -91,19 +91,21 @@ function setIntervalN(cb, delay, n=0, after) {
 
 class App extends Component {
   images = { s1, s2, s3, s4, s5, s6 }
-  state = { top: 0, left: 0, vh: 0, sprite: 1, powerUp: {}, beers: 0, speed: 5, facing: null, motion: ""}
+  state = { top: 0, left: 0, vh: 0, sprite: 1, powerUp: {}, beers: 0, speed: 5, facing: null, motion: "", moving: false}
 
   //TODO: ticker function that handles motion
 
   componentDidMount() {
     const vh = window.innerHeight;
     this.setState({ vh, top: vh, loaded: true })
-    document.addEventListener('keydown', this.handleInput)
+    if (!this.state.moving)
+      document.addEventListener('keydown', this.handleInput)
     setTimeout( () => this.addPowerUp(), 1000)
   }
 
   componentWillUnmount() {
-    document.removeEventListener('keydown', this.handleInput)
+    if (!this.state.moving)
+      document.removeEventListener('keydown', this.handleInput)
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -184,42 +186,47 @@ class App extends Component {
       console.log("USE VIM KEYS")
     }
   }
+
+  startMovement = (cb, generator) => {
+    this.setState({moving: true})
+    this.ticker = setIntervalGenerator(cb, 300, generator,
+      () => { this.setState({moving: false}) })
+  }
+
   move = (key) => {
     const { top, left, speed, beers } = this.state;
-    let moved = false
-    let slip = 0
-    let drunk = beers > 10
-    if (drunk)
-      slip = beers - 10
+    const intoxication = beers > 10 ? beers - 10 : 0
 
-    let offset = Math.floor(Math.random() * 2)
-    slip = offset === 0 ? Math.abs(slip) : -Math.abs(slip)
+    //let offset = Math.floor(Math.random() * 2)
+    //slip = offset === 0 ? Math.abs(slip) : -Math.abs(slip)
 
     const doMovement = (l, t) => {
-      //console.log(`left: ${l}, top: ${t}`)
+      console.log(`left: ${l}, top: ${t}`)
       this.setState({left: l, top: t})
       this.walk(true)
     }
-      
+
+    const slip = () => Math.floor(Math.random() * 2) === 0 ? intoxication : -intoxication
+
     switch (key) {
       case 'h':
         if (left > 0) {
           this.setState({facing: "FlipH"})
-          doMovement(left - (5 + speed), top + slip)
+          doMovement(left - (5 + speed), top + slip())
         }
         break
       case 'j':
         if (top < window.innerHeight)
-          doMovement(left - slip, top + (5 + speed))
+          doMovement(left - slip(), top + (5 + speed))
         break
       case 'k':
         if (top > 159)
-          doMovement(left - slip, top - (5 + speed))
+          doMovement(left - slip(), top - (5 + speed))
         break
       case 'l':
         if (left < window.innerWidth - 161) {
           this.setState({facing: null})
-          doMovement(left + (5 + speed), top + slip)
+          doMovement(left + (5 + speed), top + slip())
         }
         break
       default:
