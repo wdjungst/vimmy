@@ -9,7 +9,7 @@ import s6 from './images/s6.png';
 import beer from './images/beer.png';
 
 const MoveRegex = /[hjkl]/
-const MotionSpeed = "500" // Milliseconds
+const MotionSpeed = "50" // Milliseconds
 
 const Man = styled.img`
   position: absolute;
@@ -32,7 +32,7 @@ const PowerUp = styled.img`
 `
 
 // helpful link: https://stackoverflow.com/questions/2956966/javascript-telling-setinterval-to-only-fire-x-amount-of-times
-//Invokes callback on each value of generator, optionally calling after once generator has expired
+//Invokes callback on each value of generator, optionally calling 'after' once generator has expired
 function setIntervalGenerator(callback, delay, generator, after) {
   let intervalId = setInterval(() => {
     let genObj = generator.next()
@@ -59,8 +59,7 @@ function *counter(start=0, step=1) {
 
 //Start & End are inclusive
 function *range(start, end, step=1) {
-  //TODO: handling for endless values
-  //if (start > end && step < 0)
+  //This *should* keep you from generating an 'endless' range
   if ((end - start <= 0 && step > 0) || (end - start >= 0 && step < 0)) {
     return
   }
@@ -97,8 +96,6 @@ class App extends Component {
   images = { s1, s2, s3, s4, s5, s6 }
   state = { top: 0, left: 0, vh: 0, sprite: 1, powerUp: {}, beers: 0, speed: 5, facing: null, motion: "", moving: false}
 
-  //TODO: ticker function that handles motion
-
   componentDidMount() {
     const vh = window.innerHeight;
     this.setState({ vh, top: vh, loaded: true })
@@ -115,7 +112,7 @@ class App extends Component {
   componentDidUpdate(prevProps, prevState) {
     if (prevState.top !== this.state.top || prevState.left !== this.state.left) {
       const { beers, speed } = this.state;
-      if (this.colide()) { 
+      if (this.collide()) { 
         this.setState({ beers: beers + 1, powerUp: {}, speed: speed + 1 }, () => {
           const { powerUp } = this.state;
           if (!powerUp.top && !powerUp.left)
@@ -125,7 +122,7 @@ class App extends Component {
     }
   }
 
-  colide = () => {
+  collide = () => {
 		const rect1 = document.getElementById('man').getBoundingClientRect();
 		const rect2 = document.getElementById('beer').getBoundingClientRect();
     return !(rect1.right < rect2.left + 60 || 
@@ -171,30 +168,30 @@ class App extends Component {
     if (motion === "" || motion === "0")
       return 1
     else
-      return parseInt(motion)
+      return parseInt(motion, 10)
 
   }
 
   handleInput = ({key}) => {
     // If Numeric
     if (/\d/.test(key)) 
-      this.updateMotion(parseInt(key))
+      this.updateMotion(parseInt(key, 10))
     // If one of 'hjkl'
     else if (MoveRegex.test(key)) {
       this.move(key)
-      this.updateMotion()
+      this.updateMotion() // Clears motion
     }
     // Otherwise
     else {
-      this.updateMotion()
+      this.updateMotion() // Clears motion
       console.log("USE VIM KEYS")
     }
   }
 
-  startMovement = (cb, generator) => {
+  startMovement = (cb, rangeGen) => {
     document.removeEventListener('keydown', this.handleInput)
     this.setState({moving: true})
-    this.ticker = setIntervalGenerator(cb, 50, generator,
+    this.ticker = setIntervalGenerator(cb, MotionSpeed, rangeGen,
       () => { this.setState({moving: false}); 
       document.addEventListener('keydown', this.handleInput) })
   }
@@ -214,13 +211,12 @@ class App extends Component {
     //slip = offset === 0 ? Math.abs(slip) : -Math.abs(slip)
 
     const doMovement = (l, t) => {
-      console.log(`left: ${l}, top: ${t}`)
+      //console.log(`left: ${l}, top: ${t}`)
       this.setState({left: l, top: t})
       this.walk(true)
     }
 
     const slip = () => Math.floor(Math.random() * 2) === 0 ? intoxication : -intoxication
-    console.log(motion)
 
     switch (key) {
         // Left movement
@@ -234,6 +230,7 @@ class App extends Component {
               range(left, Math.max(left - (motion * adjSpeed), lBound), -adjSpeed))
         }
         break
+        // Downward movement
       case 'j':
         if (top < bBound)
           if (motion === 1)
@@ -242,8 +239,9 @@ class App extends Component {
             this.startMovement((t) => doMovement(this.state.left - slip(), t),
               range(top, Math.min(top + (motion * adjSpeed), bBound), adjSpeed))
         break
+        // Upward movement
       case 'k':
-        if (top > tBound)
+        if (top > tBound) // Remember that the lower you are, the larger your 'top' value
           if (motion === 1)
             doMovement(left - slip(), top - adjSpeed)
           else
