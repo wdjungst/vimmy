@@ -61,6 +61,10 @@ function *counter(start=0, step=1) {
 function *range(start, end, step=1) {
   //TODO: handling for endless values
   //if (start > end && step < 0)
+  if ((end - start <= 0 && step > 0) || (end - start >= 0 && step < 0)) {
+    return
+  }
+
   if (start < end)
     for (let i of counter(start, step)) {
       if (i > end)
@@ -201,39 +205,62 @@ class App extends Component {
     const intoxication = beers > 10 ? beers - 10 : 0
     const adjSpeed = 5 + speed
 
+    const lBound = 0
+    const bBound = 159
+    const tBound = window.innerHeight
+    const rBound = window.innerWidth - 161
+
     //let offset = Math.floor(Math.random() * 2)
     //slip = offset === 0 ? Math.abs(slip) : -Math.abs(slip)
 
     const doMovement = (l, t) => {
+      console.log(`left: ${l}, top: ${t}`)
       this.setState({left: l, top: t})
       this.walk(true)
     }
 
     const slip = () => Math.floor(Math.random() * 2) === 0 ? intoxication : -intoxication
+    console.log(motion)
 
     switch (key) {
+        // Left movement
       case 'h':
-        if (left > 0) {
+        if (left > lBound) {
           this.setState({facing: "FlipH"})
           if (motion === 1)
             doMovement(left - adjSpeed, top + slip())
           else
             this.startMovement((l) => doMovement(l, this.state.top + slip()),
-              range(left, Math.max(-(motion * adjSpeed), 0), -adjSpeed))
+              range(left, Math.max(-(motion * adjSpeed), lBound), -adjSpeed))
         }
         break
       case 'j':
-        if (top < window.innerHeight)
-          doMovement(left - slip(), top + (5 + speed))
+        if (top < tBound)
+          if (motion === 1)
+            doMovement(left - slip(), top + adjSpeed)
+          else
+            this.startMovement((t) => doMovement(this.state.left - slip(), t),
+              range(top, Math.max((motion * adjSpeed), tBound), adjSpeed))
         break
       case 'k':
-        if (top > 159)
-          doMovement(left - slip(), top - (5 + speed))
+        if (top > bBound)
+          if (motion === 1)
+            doMovement(left - slip(), top - adjSpeed)
+          else
+            this.startMovement((t) => doMovement(this.state.left - slip(), t),
+              range(top, Math.max(-(motion * adjSpeed), bBound), -adjSpeed))
         break
+        // Right movement
       case 'l':
-        if (left < window.innerWidth - 161) {
+        if (left < rBound) {
           this.setState({facing: null})
-          doMovement(left + (5 + speed), top + slip())
+          if (motion === 1)
+              doMovement(left + adjSpeed, top + slip())
+          else {
+            console.log(`motion * adjSpeed = ${motion * adjSpeed}, rbound = ${rBound}`)
+            this.startMovement((l) => doMovement(l, this.state.top + slip()),
+              range(left, Math.max((motion * adjSpeed), rBound), adjSpeed))
+          }
         }
         break
       default:
