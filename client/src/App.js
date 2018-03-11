@@ -206,8 +206,8 @@ class App extends Component {
     const adjSpeed = 5 + speed
 
     const lBound = 0
-    const bBound = 159
-    const tBound = window.innerHeight
+    const tBound = 159
+    const bBound = window.innerHeight
     const rBound = window.innerWidth - 161
 
     //let offset = Math.floor(Math.random() * 2)
@@ -231,24 +231,24 @@ class App extends Component {
             doMovement(left - adjSpeed, top + slip())
           else
             this.startMovement((l) => doMovement(l, this.state.top + slip()),
-              range(left, Math.max(-(motion * adjSpeed), lBound), -adjSpeed))
+              range(left, Math.max(left - (motion * adjSpeed), lBound), -adjSpeed))
         }
         break
       case 'j':
-        if (top < tBound)
+        if (top < bBound)
           if (motion === 1)
             doMovement(left - slip(), top + adjSpeed)
           else
             this.startMovement((t) => doMovement(this.state.left - slip(), t),
-              range(top, Math.max((motion * adjSpeed), tBound), adjSpeed))
+              range(top, Math.min(top + (motion * adjSpeed), bBound), adjSpeed))
         break
       case 'k':
-        if (top > bBound)
+        if (top > tBound)
           if (motion === 1)
             doMovement(left - slip(), top - adjSpeed)
           else
             this.startMovement((t) => doMovement(this.state.left - slip(), t),
-              range(top, Math.max(-(motion * adjSpeed), bBound), -adjSpeed))
+              range(top, Math.max(top - (motion * adjSpeed), tBound), -adjSpeed))
         break
         // Right movement
       case 'l':
@@ -259,7 +259,7 @@ class App extends Component {
           else {
             console.log(`motion * adjSpeed = ${motion * adjSpeed}, rbound = ${rBound}`)
             this.startMovement((l) => doMovement(l, this.state.top + slip()),
-              range(left, Math.max((motion * adjSpeed), rBound), adjSpeed))
+              range(left, Math.min(left + (motion * adjSpeed), rBound), adjSpeed))
           }
         }
         break
