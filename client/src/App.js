@@ -9,7 +9,7 @@ import s6 from './images/s6.png';
 import beer from './images/beer.png';
 
 const MoveRegex = /[hjkl]/
-const MotionSpeed = "50" // Milliseconds
+let MotionSpeed = 40 // Milliseconds
 
 const Man = styled.img`
   position: absolute;
@@ -189,11 +189,14 @@ class App extends Component {
   }
 
   startMovement = (cb, rangeGen) => {
+    //Make it so we can't enter input during movement
     document.removeEventListener('keydown', this.handleInput)
     this.setState({moving: true})
+    //Activate our self-destructing interval
     this.ticker = setIntervalGenerator(cb, MotionSpeed, rangeGen,
       () => { this.setState({moving: false}); 
       document.addEventListener('keydown', this.handleInput) })
+    //Then make sure we return to regular state once we've finished moving
   }
 
   move = (key) => {
@@ -205,7 +208,7 @@ class App extends Component {
     const lBound = 0
     const tBound = 159
     const bBound = window.innerHeight
-    const rBound = window.innerWidth - 161
+    const rBound = window.innerWidth - 130
 
     //let offset = Math.floor(Math.random() * 2)
     //slip = offset === 0 ? Math.abs(slip) : -Math.abs(slip)
@@ -267,11 +270,12 @@ class App extends Component {
   }
 
   render() {
-    const { top, left, loaded, sprite, powerUp, beers, facing } = this.state
+    const { top, left, loaded, sprite, powerUp, beers, facing, motion} = this.state
 
     return (
       <div>
-        <span>Beer Count {beers}</span>
+        <span>Beer Count {beers}</span><br/>
+        <span>Motion: {motion === "" ? "" : motion}</span>
         { loaded && <Man id="man" top={top} left={left} src={this.images[`s${sprite}`]} facing={facing} /> }
         { powerUp && <PowerUp id="beer" src={beer} top={powerUp.top} left={powerUp.left} /> }
       </div>
