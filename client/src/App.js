@@ -8,6 +8,7 @@ import s4 from './images/s4.png';
 import s5 from './images/s5.png';
 import s6 from './images/s6.png';
 import PowerUp from './components/PowerUp';
+import Zombie from './components/Zombie';
 import { placePowerUp, removePowerUp } from './reducers/powerUp';
 
 const MoveRegex = /[hjkl]/
@@ -234,6 +235,18 @@ class App extends Component {
     }
   }
 
+  end = () => {
+    return window.innerWidth - 50
+  }
+
+  middle = () => {
+    return (window.innerHeight / 2) - 50
+  }
+
+  bottom = () => {
+    return window.innerHeight - 100
+  }
+
   render() {
     const { top, left, loaded, sprite, beers, facing, motion} = this.state
 
@@ -243,6 +256,9 @@ class App extends Component {
         <span>Motion: {motion === "" ? "" : motion}</span>
         { loaded && <Man id="man" top={top} left={left} src={this.images[`s${sprite}`]} facing={facing} /> }
         <PowerUp />
+        <Zombie y={20} speed={2}/>
+        <Zombie speed={10} x={this.end()} y={this.middle()} facing="left" />
+        <Zombie speed={7} y={this.bottom()} facing="right" />
       </div>
     )
     
