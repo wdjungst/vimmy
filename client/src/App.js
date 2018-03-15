@@ -23,8 +23,6 @@ const Man = styled.img`
   filter: ${ props => props.facing };
 `
 
-// helpful link: https://stackoverflow.com/questions/2956966/javascript-telling-setinterval-to-only-fire-x-amount-of-times
-//Invokes callback on each value of generator, optionally calling 'after' once generator has expired
 function setIntervalGenerator(callback, delay, generator, after) {
   let intervalId = setInterval(() => {
     let genObj = generator.next()
@@ -49,9 +47,7 @@ function *counter(start=0, step=1) {
     yield i += step
 }
 
-//Start & End are inclusive
 function *range(start, end, step=1) {
-  //This *should* keep you from generating an 'endless' range
   if ((end - start <= 0 && step > 0) || (end - start >= 0 && step < 0)) {
     return
   }
@@ -74,15 +70,6 @@ function setIntervalN(cb, delay, n=0, after) {
   return n === 0 ? setInterval(cb, delay) :
     setIntervalGenerator(cb, delay, range(0, n), after)
 }
-
-//setIntervalGenerator((i) => console.log(`step ${i}`), 500, range(0, 100, 5))
-//setIntervalN((i) => console.log(`step ${i}`), 500, 20, () => console.log("all finished!"))
-
-//for (let i of range(0, 100, 5))
-//  console.log(i)
-//
-//for (let i of range(0, -100, -5))
-//  console.log(i)
 
 class App extends Component {
   images = { s1, s2, s3, s4, s5, s6 }
@@ -152,8 +139,6 @@ class App extends Component {
       this.setState({motion: ""})
     else
       this.setState({motion: motion + n})
-
-    //  console.log(this.state.motion)
   }
 
   getMotion = () => {
@@ -167,30 +152,24 @@ class App extends Component {
   }
 
   handleInput = ({key}) => {
-    // If Numeric
     if (/\d/.test(key)) 
       this.updateMotion(parseInt(key, 10))
-    // If one of 'hjkl'
     else if (MoveRegex.test(key)) {
       this.move(key)
-      this.updateMotion() // Clears motion
+      this.updateMotion()
     }
-    // Otherwise
     else {
-      this.updateMotion() // Clears motion
+      this.updateMotion()
       console.log("USE VIM KEYS")
     }
   }
 
   startMovement = (cb, rangeGen) => {
-    //Make it so we can't enter input during movement
     document.removeEventListener('keydown', this.handleInput)
     this.setState({moving: true})
-    //Activate our self-destructing interval
     this.ticker = setIntervalGenerator(cb, MotionSpeed, rangeGen,
       () => { this.setState({moving: false}); 
       document.addEventListener('keydown', this.handleInput) })
-    //Then make sure we return to regular state once we've finished moving
   }
 
   move = (key) => {
@@ -204,11 +183,7 @@ class App extends Component {
     const bBound = window.innerHeight
     const rBound = window.innerWidth - 130
 
-    //let offset = Math.floor(Math.random() * 2)
-    //slip = offset === 0 ? Math.abs(slip) : -Math.abs(slip)
-
     const doMovement = (l, t) => {
-      //console.log(`left: ${l}, top: ${t}`)
       this.setState({left: l, top: t})
       this.walk(true)
     }
@@ -216,7 +191,6 @@ class App extends Component {
     const slip = () => Math.floor(Math.random() * 2) === 0 ? intoxication : -intoxication
 
     switch (key) {
-        // Left movement
       case 'h':
         if (left > lBound) {
           this.setState({facing: "FlipH"})
@@ -227,7 +201,6 @@ class App extends Component {
               range(left, Math.max(left - (motion * adjSpeed), lBound), -adjSpeed))
         }
         break
-        // Downward movement
       case 'j':
         if (top < bBound)
           if (motion === 1)
@@ -236,16 +209,14 @@ class App extends Component {
             this.startMovement((t) => doMovement(this.state.left - slip(), t),
               range(top, Math.min(top + (motion * adjSpeed), bBound), adjSpeed))
         break
-        // Upward movement
       case 'k':
-        if (top > tBound) // Remember that the lower you are, the larger your 'top' value
+        if (top > tBound)
           if (motion === 1)
             doMovement(left - slip(), top - adjSpeed)
           else
             this.startMovement((t) => doMovement(this.state.left - slip(), t),
               range(top, Math.max(top - (motion * adjSpeed), tBound), -adjSpeed))
         break
-        // Right movement
       case 'l':
         if (left < rBound) {
           this.setState({facing: null})
