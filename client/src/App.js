@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import PowerUp from './components/PowerUp';
 import { placePowerUp } from './reducers/powerUp';
 import Hero from './components/Hero';
+import GameLoop from './components/GameLoop';
 
 class App extends Component {
   state = { vh: 0, loaded: false }
@@ -18,11 +19,11 @@ class App extends Component {
     const { beers } = this.props
 
     return (
-      <div>
+      <GameLoop>
         <p>Beers: {beers}</p>
         <Hero />
         <PowerUp />
-      </div>
+      </GameLoop>
     )
     
   }
