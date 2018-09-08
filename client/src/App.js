@@ -15,9 +15,11 @@ class App extends Component {
 
   render() {
     const { loaded } = this.state
+    const { beers } = this.props
 
     return (
       <div>
+        <p>Beers: {beers}</p>
         <Hero />
         <PowerUp />
       </div>
@@ -27,7 +29,10 @@ class App extends Component {
 }
 
 const mapStateToProps = (state) => {
-  return { powerUp: state.powerUp }
+  return { 
+    powerUp: state.powerUp, 
+    beers: state.hero.beers 
+  }
 }
 
 export default connect(mapStateToProps)(App);

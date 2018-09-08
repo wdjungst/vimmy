@@ -1,25 +1,13 @@
 //TYPES
-const CHANGE = 'hero/CHANGE';
-const MOVE = 'hero/MOVE'; 
-const SPEED_UP = 'hero/SPEED_UP';
+const DRINK = 'hero/DRINK';
 
 //REDUCER
-const hero = ( state = { top: 0, left: 0, sprite: 1, facing: null }, action ) => {
+const hero = ( state = { beers: 0 }, action ) => {
   switch (action.type) {
-    case CHANGE:
+    case DRINK:
       return {
         ...state,
-        ...action.sprite,
-      }
-    case MOVE:
-      return {
-        ...state,
-        ...action.loc
-      }
-    case SPEED_UP:
-      return {
-        ...state,
-        ...action.speed,
+        beers: action.beers,
       }
     default:
       return state
@@ -27,17 +15,8 @@ const hero = ( state = { top: 0, left: 0, sprite: 1, facing: null }, action ) =>
 }
 
 //ACTIONS
-export const change = (sprite) => {
-  return { type: CHANGE, sprite }
+export const drink = (beers) => {
+  return { type: DRINK, beers }
 }
-
-export const move = (loc) => {
-  return { type: MOVE, loc }
-}
-
-export const speedUp = (speed) => {
-  return { type: SPEED_UP, speed }
-}
-
 
 export default hero;
