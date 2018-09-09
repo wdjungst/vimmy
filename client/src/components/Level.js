@@ -3,10 +3,12 @@ import { connect } from 'react-redux'
 import { getObjectives } from '../levels'
 import { levelUp } from '../reducers/hero'
 import TimedPowerUp from './TimedPowerUp'
+import Boulder from './Boulder'
 
 class Level extends React.Component {
   mechToComp = {
     TimedPowerUp,
+    Boulder,
   }
 
   state = { showObjectives: false, objective: {}, mechanics: [] }
@@ -19,7 +21,8 @@ class Level extends React.Component {
   componentDidUpdate(prevProps) {
     if (prevProps.beers !== this.props.beers) {
       const { objective, mechanics } = getObjectives(this.props.level)
-      this.setState({ objective, mechanics: [...this.state.mechanics, ...mechanics] }, () => {
+      const mechs = [...new Set([...this.state.mechanics, ...mechanics])]
+      this.setState({ objective, mechanics: mechs }, () => {
         const goal = objective.beers
         if (this.props.beers >= goal) {
           this.props.dispatch(levelUp())

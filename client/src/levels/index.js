@@ -9,7 +9,7 @@ const levels = {
   },
   3: { 
     objective: { text: 'Drink 50 beers', beers: 50 },
-    mechanics: [],
+    mechanics: ["Boulder"],
   }
 }
 

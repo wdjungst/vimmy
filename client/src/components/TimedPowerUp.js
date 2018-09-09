@@ -4,7 +4,7 @@ import { placePowerUp, removePowerUp } from '../reducers/powerUp'
 
 class TimedPowerUp extends Component {
   componentDidMount() {
-    this.int = setInterval( this.clearPowerUp, 4000 )
+    this.int = setInterval( this.clearPowerUp, 10000 )
   }
 
   componentWillUnmount() {
