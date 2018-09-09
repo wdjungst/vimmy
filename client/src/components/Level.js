@@ -4,18 +4,20 @@ import { getObjectives } from '../levels'
 import { levelUp } from '../reducers/hero'
 
 class Level extends React.Component {
-  state = { showObjectives: false, objectives: [] }
+  state = { showObjectives: false, objective: {}, mechanics: [] }
 
   componentDidMount() {
-    const objectives = getObjectives(this.props.level)
-    this.setState({ objectives })
+    const { objective, mechanics } = getObjectives(this.props.level)
+    debugger
+    this.setState({ objective, mechanics })
   }
 
   componentDidUpdate(prevProps) {
     if (prevProps.beers !== this.props.beers) {
-      this.setState({ objectives: getObjectives(this.props.level) }, () => {
-        const goal = this.state.objectives.find( l => l.hasOwnProperty('beers') )
-        if (this.props.beers >= goal.beers) {
+      const { objective, mechanics } = getObjectives(this.props.level)
+      this.setState({ objective, mechanics }, () => {
+        const goal = objective.beers
+        if (this.props.beers >= goal) {
           this.props.dispatch(levelUp())
         }
       })
@@ -23,11 +25,9 @@ class Level extends React.Component {
   }
 
   render() {
-    const { objectives } = this.state
+    const { objective, mechanics } = this.state
     return (
-      <ul>
-        { objectives.map( (o,i) => <li key={i}>{o.text}</li> ) }
-      </ul>
+      <h2>Objective: {objective.text}</h2>
     )
   }
 }
