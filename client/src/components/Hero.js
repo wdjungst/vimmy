@@ -78,35 +78,45 @@ class Hero extends Component {
     const vh = window.innerHeight
     this.setState({ top: vh })
     document.addEventListener('keydown', this.handleInput)
+    this.tick  = setInterval( this.detect, 100 )
   }
 
   componentWillUnmount() {
     document.removeEventListener('keydown', this.handleInput)
+    clearInterval(this.tick)
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    if (prevState.top !== this.state.top || prevState.left !== this.state.left) {
-      const { speed } = this.state
-      const { beers, dispatch } = this.props
-      const collision = this.collide()
-      if (collision.length) { 
-        if (collision.includes('beer')) {
-          dispatch(removePowerUp())
-          dispatch(drink(beers + 1))
-          this.setState({ speed: speed + 1 }, () => {
-            const { powerUp } = this.props
-            if (!powerUp.show)
-              this.addPowerUp()
-          })
-        } else {
-          this.assessDamage(collision.filter( c => c !== 'beer' ))
-        }
+  detect = () => {
+    const { speed } = this.state
+    const { beers, dispatch } = this.props
+    const collision = this.collide()
+    if (collision.length) { 
+      if (collision.includes('beer')) {
+        dispatch(removePowerUp())
+        dispatch(drink(beers + 1))
+        this.setState({ speed: speed + 1 }, () => {
+          const { powerUp } = this.props
+          if (!powerUp.show)
+            this.addPowerUp()
+        })
+      } else {
+        this.assessDamage(collision.filter( c => c !== 'beer' ))
       }
     }
   }
 
   assessDamage = (collisions) => {
-    debugger
+    const { dispatch, beers } = this.props
+    let newBeerValue = beers
+    for (let damage of collisions) {
+      switch (damage) {
+        case 'boulder':
+          newBeerValue = Math.floor( beers * .9 )
+          break
+      }
+    }
+
+    dispatch(drink(newBeerValue))
   }
 
   collide = () => {
