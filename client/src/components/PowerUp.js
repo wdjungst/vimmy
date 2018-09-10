@@ -15,7 +15,7 @@ const Img = styled.img`
 
 const PowerUp = ({ top, left, show }) => {
   if (show) {
-    return <Img id="beer" src={beer} top={top} left={left} />
+    return <Img id="beer" className="collide" src={beer} top={top} left={left} />
   } else {
     return null
   }

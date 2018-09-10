@@ -8,7 +8,6 @@ import boulder5 from '../images/boulder5.png'
 import boulder6 from '../images/boulder6.png'
 import boulder7 from '../images/boulder7.png'
 import boulder8 from '../images/boulder8.png'
-
 const sprites = {
   boulder1,
   boulder2,
@@ -67,7 +66,7 @@ class Boulder extends React.Component {
     const { sprite, top, left } = this.state
     const image = sprites[`boulder${sprite}`]
     return (
-      <Rock src={image} alt="boulder" top={top} left={left} className="damage"/>
+      <Rock src={image} alt="boulder" top={top} left={left} id="boulder" className="collide damage"/>
     )
   }
 }

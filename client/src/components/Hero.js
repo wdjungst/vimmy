@@ -88,26 +88,49 @@ class Hero extends Component {
     if (prevState.top !== this.state.top || prevState.left !== this.state.left) {
       const { speed } = this.state
       const { beers, dispatch } = this.props
-      if (this.collide()) { 
-        dispatch(removePowerUp())
-        dispatch(drink(beers + 1))
-        this.setState({ speed: speed + 1 }, () => {
-          const { powerUp } = this.props
-          if (!powerUp.show)
-            this.addPowerUp()
-        })
+      const collision = this.collide()
+      if (collision.length) { 
+        if (collision.includes('beer')) {
+          dispatch(removePowerUp())
+          dispatch(drink(beers + 1))
+          this.setState({ speed: speed + 1 }, () => {
+            const { powerUp } = this.props
+            if (!powerUp.show)
+              this.addPowerUp()
+          })
+        } else {
+          this.assessDamage(collision.filter( c => c !== 'beer' ))
+        }
       }
     }
+  }
+
+  assessDamage = (collisions) => {
+    debugger
   }
 
   collide = () => {
     try {
 		  const rect1 = document.getElementById('man').getBoundingClientRect()
-		  const rect2 = document.getElementById('beer').getBoundingClientRect()
-      return !(rect1.right < rect2.left + 60 || 
-               rect1.left > rect2.right - 60 || 
-               rect1.bottom < rect2.top + 60 || 
-               rect1.top > rect2.bottom - 60)
+      const objects = []
+      const rectangles = document.getElementsByClassName('collide')
+      for (let i = 0; i < rectangles.length; i++) {
+        const obj = rectangles[i]
+        let { left, right, top, bottom } = obj.getBoundingClientRect()
+        objects.push({ left, right, top, bottom, id: obj.id })
+      }
+
+      let collisions = objects.map( (rect) => {
+        if (
+            !(rect1.right < rect.left + 60 || 
+                 rect1.left > rect.right - 60 || 
+                 rect1.bottom < rect.top + 60 || 
+                 rect1.top > rect.bottom - 60)
+           ) {
+             return rect.id
+           }
+      })
+      return collisions.filter(n => n)
     } catch (err) {
       return false
     }
