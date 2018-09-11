@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 import s1 from '../images/s1.png'
@@ -12,6 +12,11 @@ import { drink } from '../reducers/hero'
 
 const MoveRegex = /[hjkl]/
 let MotionSpeed = 40 // Milliseconds
+
+const Danger = styled.p`
+  background-color: red;
+  color: white;
+`
 
 const Man = styled.img`
   position: absolute
@@ -72,7 +77,7 @@ function setIntervalN(cb, delay, n=0, after) {
 
 class Hero extends Component {
   images = { s1, s2, s3, s4, s5, s6 }
-  state = { top: 0, left: 0, sprite: 1, speed: 5, facing: null, motion: "" }
+  state = { top: 0, left: 0, sprite: 1, speed: 5, facing: null, motion: "", safe: false }
 
   componentDidMount() {
     const vh = window.innerHeight
@@ -107,16 +112,23 @@ class Hero extends Component {
 
   assessDamage = (collisions) => {
     const { dispatch, beers } = this.props
-    let newBeerValue = beers
-    for (let damage of collisions) {
-      switch (damage) {
-        case 'boulder':
-          newBeerValue = Math.floor( beers * .9 )
-          break
+    const { safe } = this.state
+    if (!safe) {
+      let newBeerValue = beers
+      for (let damage of collisions) {
+        switch (damage) {
+          case 'boulder':
+            newBeerValue = Math.floor( beers * .9 )
+            break
+        }
       }
-    }
 
-    dispatch(drink(newBeerValue))
+      this.setState({ safe: true }, () => {
+        setTimeout( () => this.setState({ safe: false }), 1000 )
+      })
+
+      dispatch(drink(newBeerValue))
+    }
   }
 
   collide = () => {
@@ -267,10 +279,13 @@ class Hero extends Component {
   }
 
   render() {
-    const { top, left, sprite, facing, motion} = this.state
+    const { top, left, sprite, facing, motion, safe } = this.state
 
     return (
+      <Fragment>
+        { safe && <Danger>Run!</Danger> }
         <Man id="man" top={top} left={left} src={this.images[`s${sprite}`]} facing={facing} /> 
+      </Fragment>
     )
     
   }
