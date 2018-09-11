@@ -20,10 +20,10 @@ class Level extends React.Component {
     this.setState({ objective, mechanics })
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps, prevState) {
     if (prevProps.beers !== this.props.beers) {
       const { objective, mechanics } = getObjectives(this.props.level)
-      const mechs = [...new Set([...this.state.mechanics, ...mechanics])]
+      const mechs = mechanics
       this.setState({ objective, mechanics: mechs }, () => {
         const goal = objective.beers
         if (this.props.beers >= goal) {
