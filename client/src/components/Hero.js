@@ -19,12 +19,13 @@ const Danger = styled.p`
 `
 
 const Man = styled.img`
-  position: absolute
-  height: 180px
-  width: 150px
-  top: ${ props => props.top - 160 }px
-  left: ${ props => props.left }px
-  transform: ${ props => props.facing ? 'scaleX(-1)' : 'scale(1)' }
+  position: absolute;
+  height: 180px;
+  width: 150px;
+  top: ${ props => props.top - 160 }px;
+  left: ${ props => props.left }px;
+  transform: ${ props => props.facing ? 'scaleX(-1)' : 'scale(1)' };
+  filter: ${ props => props.facing };
 `
 
 function setIntervalGenerator(callback, delay, generator, after) {
@@ -119,6 +120,9 @@ class Hero extends Component {
         switch (damage) {
           case 'boulder':
             newBeerValue = Math.floor( beers * .9 )
+            break
+          case 'zombie':
+            newBeerValue = Math.floor( beers * .5 )
             break
         }
       }

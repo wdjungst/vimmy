@@ -4,11 +4,13 @@ import { getObjectives } from '../levels'
 import { levelUp } from '../reducers/hero'
 import TimedPowerUp from './TimedPowerUp'
 import Boulder from './Boulder'
+import Zombie from './Zombie'
 
 class Level extends React.Component {
   mechToComp = {
     TimedPowerUp,
     Boulder,
+    Zombie,
   }
 
   state = { showObjectives: false, objective: {}, mechanics: [] }
