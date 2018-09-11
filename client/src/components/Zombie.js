@@ -37,19 +37,24 @@ class Zombie extends Component {
   }
 
   path = () => {
-    const { facing, left, sprite } = this.state
+    const { facing, left, sprite, top } = this.state
+    const height = window.innerHeight 
     let step = left
     let changeDirection = facing
     let view
+    let newTop = top
 
     if  (facing) {
-      step -= 10
-      if (step < 0)
+      step -= 30
+      if (step <= -150) {
         changeDirection = null
+        newTop = Math.floor(Math.random() * (height-180) + 180)
+      }
     } else {
-      step += 10
-      if (step > window.innerWidth - 150) { 
+      step += 30
+      if (step > window.innerWidth) { 
         changeDirection = "FlipH"
+        newTop = Math.floor(Math.random() * (height-180) + 180)
       }
     }
 
@@ -58,7 +63,7 @@ class Zombie extends Component {
     else
       view = sprite + 1
 
-    this.setState({ left: step, facing: changeDirection, sprite: view })
+    this.setState({ left: step, facing: changeDirection, sprite: view, top: newTop })
   }
 
 
