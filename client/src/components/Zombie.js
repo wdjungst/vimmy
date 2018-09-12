@@ -33,7 +33,7 @@ class Zombie extends Component {
     const top = Math.floor(Math.random() * (height-180) + 180)
     const left = Math.floor(Math.random() * (width-150) + 150)
     this.setState({ top, left })
-    this.tick = setInterval( this.path, 500 )
+    this.tick = setInterval( this.path, 250 )
   }
 
   path = () => {
