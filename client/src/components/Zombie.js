@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import styled from 'styled-components'
 import zombie1 from '../images/zombie1.png'
 import zombie2 from '../images/zombie2.png'

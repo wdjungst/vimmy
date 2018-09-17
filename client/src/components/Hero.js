@@ -71,11 +71,6 @@ function *range(start, end, step=1) {
     }
 }
 
-function setIntervalN(cb, delay, n=0, after) {
-  return n === 0 ? setInterval(cb, delay) :
-    setIntervalGenerator(cb, delay, range(0, n), after)
-}
-
 class Hero extends Component {
   images = { s1, s2, s3, s4, s5, s6 }
   state = { top: 0, left: 0, sprite: 1, speed: 5, facing: null, motion: "", safe: false }
@@ -124,6 +119,8 @@ class Hero extends Component {
           case 'zombie':
             newBeerValue = Math.floor( beers * .5 )
             break
+          default:
+            newBeerValue = beers
         }
       }
 
@@ -155,6 +152,7 @@ class Hero extends Component {
            ) {
              return rect.id
            }
+        return null
       })
       return collisions.filter(n => n)
     } catch (err) {
@@ -283,7 +281,7 @@ class Hero extends Component {
   }
 
   render() {
-    const { top, left, sprite, facing, motion, safe } = this.state
+    const { top, left, sprite, facing, safe } = this.state
 
     return (
       <Fragment>

@@ -12,7 +12,7 @@ class TimedPowerUp extends Component {
   }
 
   clearPowerUp = () => {
-    const { powerUp, dispatch } = this.props
+    const { dispatch } = this.props
     dispatch(removePowerUp())
     dispatch(placePowerUp())
   }

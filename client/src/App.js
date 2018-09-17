@@ -6,16 +6,12 @@ import Hero from './components/Hero';
 import GameLoop from './components/GameLoop';
 
 class App extends Component {
-  state = { vh: 0, loaded: false }
 
   componentDidMount() {
-    const vh = window.innerHeight;
-    this.setState({ vh, loaded: true })
     this.props.dispatch(placePowerUp())
   }
 
   render() {
-    const { loaded } = this.state
     const { beers } = this.props
 
     return (

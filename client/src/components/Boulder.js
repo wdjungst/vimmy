@@ -39,7 +39,6 @@ class Boulder extends React.Component {
   }
 
   setLoc = () => {
-    const maxLeft = window.innerWidth
     const bottom = window.innerHeight + 100
     const left = Math.floor(Math.random() * window.innerWidth )
     this.setState({ top: 0, left, bottom, sprite: 1 })
