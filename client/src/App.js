@@ -5,7 +5,7 @@ import { placePowerUp } from './reducers/powerUp';
 import Hero from './components/Hero';
 import GameLoop from './components/GameLoop';
 import Splash from './components/Splash';
-import { capitalize } from './utils/helpers';
+import ScoreCard from './components/ScoreCard';
 
 class App extends Component {
 
@@ -14,12 +14,12 @@ class App extends Component {
   }
 
   render() {
-    const { beers, powerUpType } = this.props
+    const { powerUpType } = this.props
 
     if (powerUpType) {
       return (
         <GameLoop>
-          <p>{capitalize(powerUpType)}s: {beers}</p>
+          <ScoreCard />
           <Hero />
           <PowerUp />
         </GameLoop>
@@ -30,12 +30,10 @@ class App extends Component {
     
   }
 }
-
 const mapStateToProps = (state) => {
   return { 
     powerUp: state.powerUp, 
     powerUpType: state.powerUpType,
-    beers: state.hero.beers 
   }
 }
 
