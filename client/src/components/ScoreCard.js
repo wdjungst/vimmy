@@ -11,7 +11,7 @@ const Container = styled.div`
   width: 200px;
   padding-bottom: 10px;
   padding-left: 10px;
-  background-color: rgba(0, 0, 0, .3);
+  background-color: rgba(0, 0, 0, .03);
 `
 
 class ScoreCard extends React.Component {
