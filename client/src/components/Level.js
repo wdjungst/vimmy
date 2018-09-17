@@ -35,9 +35,10 @@ class Level extends React.Component {
 
   render() {
     const { objective, mechanics } = this.state
+    const { powerUpType } = this.props
     return (
       <Fragment>
-        <h2>Objective: {objective.text}</h2>
+        <h2>Objective: {objective.text} {powerUpType}s</h2>
         { mechanics.map( (m, i) => { 
             const Comp = this.mechToComp[m]
             return <Comp key={i} />
@@ -49,7 +50,11 @@ class Level extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-  return { level: state.hero.level, beers: state.hero.beers }
+  return { 
+    level: state.hero.level, 
+    beers: state.hero.beers,
+    powerUpType: state.powerUpType,
+  }
 }
 
 export default connect(mapStateToProps)(Level)

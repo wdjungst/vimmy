@@ -1,18 +1,18 @@
 const levels = {
   1: {
-    objective: { text: 'Drink 10 beers', beers: 10 },
+    objective: { text: 'Drink 10', beers: 10 },
     mechanics: [],
   },
   2: {
-    objective: { text: 'Drink 20 beers', beers: 20 },
+    objective: { text: 'Drink 20', beers: 20 },
     mechanics: ['TimedPowerUp'],
   },
   3: { 
-    objective: { text: 'Drink 30 beers', beers: 30 },
+    objective: { text: 'Drink 30', beers: 30 },
     mechanics: ["TimedPowerUp", "Boulder"],
   },
   4: {
-    objective: { text: 'Drink 50 beers', beers: 50 },
+    objective: { text: 'Drink 50', beers: 50 },
     mechanics: ["TimedPowerUp", "Boulder", "Boulder", "Zombie"],
   },
   5: {
