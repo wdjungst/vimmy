@@ -5,7 +5,13 @@ import { capitalize } from '../utils/helpers'
 import { getObjectives } from '../levels'
 
 const Container = styled.div`
+  top: 0;
+  position: fixed;
   height: 100px;
+  width: 200px;
+  padding-bottom: 10px;
+  padding-left: 10px;
+  background-color: rgba(0, 0, 0, .3);
 `
 
 class ScoreCard extends React.Component {
