@@ -9,6 +9,7 @@ import s5 from '../images/s5.png'
 import s6 from '../images/s6.png'
 import { placePowerUp, removePowerUp } from '../reducers/powerUp'
 import { drink } from '../reducers/hero'
+import { human } from '../utils/sizes'
 
 const MoveRegex = /[hjkl]/
 let MotionSpeed = 40 // Milliseconds
@@ -20,9 +21,9 @@ const Danger = styled.p`
 
 const Man = styled.img`
   position: absolute;
-  height: 180px;
-  width: 150px;
-  top: ${ props => props.top - 160 }px;
+  height: ${ human.height}px;
+  width: ${ human.width}px;
+  top: ${ props => props.top - human.topOffset }px;
   left: ${ props => props.left }px;
   transform: ${ props => props.facing ? 'scaleX(-1)' : 'scale(1)' };
   filter: ${ props => props.facing };
@@ -117,7 +118,7 @@ class Hero extends Component {
             newBeerValue = Math.floor( beers * .9 )
             break
           case 'zombie':
-            newBeerValue = Math.floor( beers * .5 )
+            newBeerValue = Math.floor( beers * .75 )
             break
           default:
             newBeerValue = beers
@@ -145,10 +146,10 @@ class Hero extends Component {
 
       let collisions = objects.map( (rect) => {
         if (
-            !(rect1.right < rect.left + 60 || 
-                 rect1.left > rect.right - 60 || 
-                 rect1.bottom < rect.top + 60 || 
-                 rect1.top > rect.bottom - 60)
+            !(rect1.right < rect.left + 20 || 
+                 rect1.left > rect.right - 20 || 
+                 rect1.bottom < rect.top + 20 || 
+                 rect1.top > rect.bottom - 20)
            ) {
              return rect.id
            }
@@ -225,7 +226,7 @@ class Hero extends Component {
     const adjSpeed = 5 + speed
 
     const lBound = 0
-    const tBound = 159
+    const tBound = 95
     const bBound = window.innerHeight
     const rBound = window.innerWidth - 130
 

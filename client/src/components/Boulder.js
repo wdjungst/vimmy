@@ -23,8 +23,8 @@ const Rock = styled.img`
   position: absolute;
   left: ${ props => props.left }px;
   top: ${ props => props.top }px;
-  width: 100px;
-  height: 100px;
+  width: 50px;
+  height: 50px;
 `
 
 class Boulder extends React.Component {

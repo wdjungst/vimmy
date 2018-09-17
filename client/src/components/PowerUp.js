@@ -6,8 +6,8 @@ import soda from '../images/soda.png';
 
 const Img = styled.img`
   position: absolute;
-  height: 50px;
-  width: 50px;
+  height: 25px;
+  width: 25px;
   display: ${ props => (props.top && props.left) ? 'block' : 'none' };
   top: ${ props => props.top }px;
   left: ${ props => props.left }px;
